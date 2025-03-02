@@ -22,36 +22,36 @@ Below are some of the key UI pages in Trackcoders:
 
 ### Landing Page
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%201.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%201.png)
 
 
 ### Authentication Page
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%202.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%202.png)
 
 
 ### Home Page
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%203.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%203.png)
 
 ### Home Page - Solved Questions Section
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%204.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%204.png)
 
 ### Leaderboard Page
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%205.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%205.png)
 
 ### Friend Profile Page
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%208.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%208.png)
 
 ### Add Friend Page
 
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%206.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%206.png)
 
 ### Profile Update Page
-![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20ScreenShot/Screenshot%207.png)
+![image](https://github.com/sidd2512/TrackCoder-Frontend/blob/main/UI%20Screenshot/Screenshot%207.png)
 
 
 ## Installation
