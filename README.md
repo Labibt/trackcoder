@@ -65,7 +65,7 @@ Below are some of the key UI pages in Trackcoders:
 
 1. Clone the repository:
    ```sh
-   git clone <FRONTEND_REPO_LINK>
+   git clone https://github.com/sidd2512/TrackCoder-Frontend
    cd frontend
    ```
 2. Install dependencies:
