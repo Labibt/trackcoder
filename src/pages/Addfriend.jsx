@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { FiUserPlus, FiCode, FiBook, FiCoffee } from "react-icons/fi";
+import { baseUri } from "../data/constantData";
 
 const Input = ({ label, icon: Icon, ...props }) => (
   <div className="mb-6">
@@ -45,17 +46,18 @@ export default function AddFriendPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Friend added:", formData);
+    console.log("Friend sent:", formData);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/friend/add",
-        formData,
-        { withCredentials: true }
-      );
-      if (res.data.status === 201) {
-        alert(res.data.message || "Friend added successfully!");
+      const res = await axios.post(`${baseUri}/friend/add`, formData, {
+        withCredentials: true,
+      });
+      if (res.data.status === 200) {
+        alert(
+          res.data.message || "Friend added successfully! Data is fetching."
+        );
       } else {
-        alert("Something went wrong. Please try again.");
+        console.error("Error adding friend:", res.data);
+        alert(res.data.message || "Failed to add friend. Please try again.");
       }
     } catch (err) {
       console.error("Error adding friend:", err);

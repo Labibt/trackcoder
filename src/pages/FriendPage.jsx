@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/contextAPI";
+import { baseUri } from "../data/constantData";
 
 const Userdata1 = {
   user: {
@@ -128,11 +129,11 @@ export default function FriendPage() {
   const [activeTab, setActiveTab] = useState("gfg");
   const [searchTerm, setSearchTerm] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
-  const [isFollowing, setIsFollowing] = useState(false);
+
   const [Userdata, setUserData] = useState(Userdata1);
   const navigate = useNavigate();
   const { friendname } = useParams();
-  const { userData } = useContext(UserContext);
+  const { userData, setIsAuthenticated } = useContext(UserContext);
 
   const getComparisonDisplay = (userValue, friendValue) => {
     if (userValue === friendValue)
@@ -145,9 +146,9 @@ export default function FriendPage() {
   const filteredProblems =
     Userdata?.friend?.[`${activeTab}_data`]?.question_solved?.filter(
       (problem) => {
-        const matchesSearch = problem.title
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+        const matchesSearch =
+          problem.title &&
+          problem.title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesDifficulty =
           difficultyFilter === "all" ||
           (problem.difficulty &&
@@ -167,8 +168,10 @@ export default function FriendPage() {
 
       // Always fetch fresh data for the friend
       const response = await axios.get(
-        `http://localhost:5000/api/user/testuserLGC3/${friendname}`,
-        { withCredentials: true }
+        `${baseUri}/user/compare/${friendname}`,
+        {
+          withCredentials: true,
+        }
       );
 
       // Update cache
@@ -190,25 +193,16 @@ export default function FriendPage() {
     }
   };
 
-  // Log Userdata after update
-  useEffect(() => {
-    if (Userdata) {
-      console.log("Updated Userdata:", Userdata);
-    }
-  }, [Userdata]);
-
   useEffect(() => {
     fetchUserData();
+    setIsAuthenticated(true);
   }, [friendname]);
 
   const handleRemoveFriend = async () => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/friend/remove/${friendname}`,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.delete(`${baseUri}friend/remove/${friendname}`, {
+        withCredentials: true,
+      });
 
       // Clear the friend's cached data
       localStorage.removeItem(`FriendData${friendname}`);

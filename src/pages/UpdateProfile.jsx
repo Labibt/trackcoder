@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { UserContext } from "../context/contextAPI";
 import { fetchUserProfile } from "../services/fetchUserProfile";
+import { baseUri } from "../data/constantData";
 
 const Input = ({ label, icon: Icon, ...props }) => (
   <div className="mb-4">
@@ -126,13 +127,9 @@ export default function UpdateProfilePage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/updateUserProfile",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${baseUri}/user/update`, formData, {
+        withCredentials: true,
+      });
 
       alert("Profile Updated Successfully!");
       console.log("Server Response:", response.data);

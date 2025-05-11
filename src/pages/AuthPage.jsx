@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { UserContext } from "../context/contextAPI";
 import { useContext } from "react";
+import { baseUri } from "../data/constantData";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -39,7 +40,7 @@ export default function AuthPage() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${baseUri}/auth/login`,
         {
           email: "testuserLGC3@example.com",
           password: "SecurePassword123",
@@ -50,7 +51,8 @@ export default function AuthPage() {
       if (response.status === 200) {
         console.log("Login successful:", response.data);
         // Save tokens or other details if needed
-        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userid", response.data.user._id);
         localStorage.setItem("user", response.data.user);
         setIsAuthenticated(true);
         navigate(`/user`);
@@ -75,7 +77,7 @@ export default function AuthPage() {
         console.log("Trying to log in...");
         console.log(formData);
         const response = await axios.post(
-          "http://localhost:5000/api/auth/login",
+          `${baseUri}/auth/login`,
           {
             email: formData.email,
             password: formData.password,
@@ -86,7 +88,8 @@ export default function AuthPage() {
         if (response.status === 200) {
           console.log("Login successful:", response.data);
           localStorage.setItem("user", response.data.user);
-          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("userid", response.data.user._id);
+          localStorage.setItem("isLoggedIn", "true");
           setIsAuthenticated(true);
           navigate(`/user`);
           setFormData({ email: "", password: "" });
@@ -102,10 +105,7 @@ export default function AuthPage() {
           return;
         }
 
-        const response = await axios.post(
-          "http://localhost:5000/api/auth/register",
-          formData
-        );
+        const response = await axios.post(`${baseUri}/auth/register`, formData);
 
         if (response.status == 201) {
           setIsLogin(true);

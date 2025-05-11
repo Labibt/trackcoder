@@ -11,8 +11,10 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { isAuthenticated, setIsAuthenticated } = useContext(UserContext);
 
-  // Add this to check if user is logged in
-  setIsAuthenticated(localStorage.getItem("accessToken") !== null);
+  // Check if user is logged in using localStorage
+  useEffect(() => {
+    setIsAuthenticated(localStorage.getItem("isLoggedIn") === "true");
+  }, [setIsAuthenticated]);
 
   // Handle clicks outside the dropdown
   useEffect(() => {
@@ -26,22 +28,17 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update the profile dropdown section
   const toggleProfileDropdown = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
   const handleLogout = () => {
-    // Clear all authentication related data
+    // Clear all authentication-related data
     localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-    // Add any other auth-related items you need to clear
+    localStorage.removeItem("isLoggedIn");
     setIsAuthenticated(false);
-    // Close dropdowns
     setIsProfileDropdownOpen(false);
     setIsMobileMenuOpen(false);
-
-    // Navigate to home page
     navigate("/");
   };
 

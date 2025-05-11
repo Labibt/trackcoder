@@ -1,21 +1,3 @@
-// import React from "react";
-// import HeroSection from "../components/HeroSection";
-// import FeatureSection from "../components/FeatureSection";
-// import UpcomingFeatures from "../components/UpcomingFeatures";
-// import CallToAction from "../components/CallToAction";
-
-// const LandingPage = () => {
-//   return (
-//     <div>
-//       <HeroSection />
-//       <FeatureSection />
-//       <UpcomingFeatures />
-//       <CallToAction />
-//     </div>
-//   );
-// };
-
-// export default LandingPage;
 import { useEffect, useState } from "react";
 import {
   Code2,
@@ -35,12 +17,25 @@ import {
   Binary,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { base } from "framer-motion/client";
+import { baseUri } from "../data/constantData";
 
 export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
+    const pong = () => {
+      axios
+        .get(`${baseUri}/ping`, { withCredentials: true })
+        .then((response) => {
+          console.log("API Response Data:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching leaderboard data:", error);
+        });
+    };
   }, []);
 
   return (

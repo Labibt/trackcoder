@@ -1,10 +1,10 @@
 import axios from "axios";
+import { baseUri } from "../data/constantData";
 
 export const fetchUserProfile = async () => {
-  
   try {
     // Ensure withCredentials is enabled to include cookies
-    const response = await axios.get("http://localhost:5000/api/user/profile", {
+    const response = await axios.get(`${baseUri}/user/profile`, {
       withCredentials: true,
     });
     const defaultPlatformData = {

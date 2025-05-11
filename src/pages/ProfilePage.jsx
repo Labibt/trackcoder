@@ -11,7 +11,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/contextAPI";
 import { fetchUserProfile } from "../services/fetchUserProfile";
-
+import Loading from "../components/loading";
+import ErrorPage from "../components/error";
 // Platform configuration with reordered platforms (GFG, LeetCode, CodeChef)
 const PlatformData = (userData) => {
   const defaultPlatformData = {
@@ -71,7 +72,7 @@ export default function ProfilePage() {
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [platforms, setPlatforms] = useState({});
-  const { userData, setUserData } = useContext(UserContext);
+  const { userData, setUserData, setIsAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
@@ -80,6 +81,7 @@ export default function ProfilePage() {
         const data = await fetchUserProfile();
         setUserData(data);
         setPlatforms(PlatformData(data));
+        setIsAuthenticated(true);
       } catch (err) {
         setError(err.message);
         // If error is authentication related, redirect to login
@@ -120,8 +122,8 @@ export default function ProfilePage() {
         })
       : [];
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorPage error={error} />;
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
@@ -160,9 +162,9 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                {userData.name}
+                {userData?.name}
               </h1>
-              <p className="text-gray-400">@{userData.user_id}</p>
+              <p className="text-gray-400">@{userData?.user_id}</p>
             </div>
           </div>
 
@@ -184,7 +186,7 @@ export default function ProfilePage() {
               onClick={handleNavigation}
             >
               <div className="text-2xl font-bold text-purple-400">
-                {userData.friends.length}
+                {userData?.friends.length}
               </div>
               <div className="text-sm text-gray-400">Friends</div>
             </div>

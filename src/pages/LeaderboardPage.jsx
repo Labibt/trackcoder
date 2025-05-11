@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom"; // or use <a> tag for simpler navigation
 import {
   FiCode,
@@ -9,6 +9,10 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 import axios from "axios";
+import { baseUri } from "../data/constantData"; // Adjust the import path as necessary
+import Loading from "../components/loading";
+import ErrorPage from "../components/error";
+import { UserContext } from "../context/contextAPI";
 
 // Mock data structure matching API response
 
@@ -42,16 +46,16 @@ export default function LeaderboardPage() {
   const [error, setError] = useState(null);
   // const [userId] = useParams();
   const [userId, setuserId] = useState();
+  const { isAuthenticated, setIsAuthenticated } = useContext(UserContext);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         console.log("Fetching leaderboard data...");
-
-        const response = await axios.get(
-          "http://localhost:5000/api/user/testuserLGC3/leaderboard",
-          { withCredentials: true }
-        );
+        setuserId(localStorage.getItem("userid"));
+        const response = await axios.get(`${baseUri}/user/leaderboard`, {
+          withCredentials: true,
+        });
 
         // console.log("API Response Data:", response.data);
 
@@ -63,7 +67,8 @@ export default function LeaderboardPage() {
           user.name = "YOU";
           const leaderboardData = [user, ...friends];
           setAllUsers(leaderboardData);
-          console.log(leaderboardData);
+          // console.log(leaderboardData);
+          setIsAuthenticated(true);
         } else {
           setError("Failed to load leaderboard data.");
         }
@@ -78,8 +83,8 @@ export default function LeaderboardPage() {
     fetchLeaderboard();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <ErrorPage error={error} />;
 
   const filteredAndSortedUsers = Array.isArray(allUsers) // Ensure allUsers is an array
     ? allUsers
