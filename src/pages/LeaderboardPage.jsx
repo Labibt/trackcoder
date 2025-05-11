@@ -44,15 +44,14 @@ export default function LeaderboardPage() {
   const [allUsers, setAllUsers] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const [userId] = useParams();
-  const [userId, setuserId] = useState();
-  const { isAuthenticated, setIsAuthenticated } = useContext(UserContext);
+
+  const { setIsAuthenticated } = useContext(UserContext);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         console.log("Fetching leaderboard data...");
-        setuserId(localStorage.getItem("userid"));
+
         const response = await axios.get(`${baseUri}/user/leaderboard`, {
           withCredentials: true,
         });
@@ -63,7 +62,6 @@ export default function LeaderboardPage() {
           const { friends, user } = response.data.data;
           console.log(friends);
 
-          setuserId(user.user_id);
           user.name = "YOU";
           const leaderboardData = [user, ...friends];
           setAllUsers(leaderboardData);
@@ -82,9 +80,6 @@ export default function LeaderboardPage() {
 
     fetchLeaderboard();
   }, []);
-
-  if (loading) return <Loading />;
-  if (error) return <ErrorPage error={error} />;
 
   const filteredAndSortedUsers = Array.isArray(allUsers) // Ensure allUsers is an array
     ? allUsers
@@ -115,8 +110,18 @@ export default function LeaderboardPage() {
     }
   };
 
-  // if (loading) return <p>Loading leaderboard...</p>;
-  // if (error) return <p>Error: {error}</p>;
+  if (loading)
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+        <Loading />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+        <ErrorPage error={error} />
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">

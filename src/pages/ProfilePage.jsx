@@ -122,8 +122,18 @@ export default function ProfilePage() {
         })
       : [];
 
-  if (isLoading) return <Loading />;
-  if (error) return <ErrorPage error={error} />;
+  if (isLoading)
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+        <Loading />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+        <ErrorPage error={error} />
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">

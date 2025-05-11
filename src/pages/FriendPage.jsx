@@ -15,7 +15,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/contextAPI";
 import { baseUri } from "../data/constantData";
-
+import Loading from "../components/loading";
+import ErrorPage from "../components/error";
 const Userdata1 = {
   user: {
     userId: "testuserLGC3",
@@ -129,7 +130,8 @@ export default function FriendPage() {
   const [activeTab, setActiveTab] = useState("gfg");
   const [searchTerm, setSearchTerm] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState("all");
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [Userdata, setUserData] = useState(Userdata1);
   const navigate = useNavigate();
   const { friendname } = useParams();
@@ -183,10 +185,13 @@ export default function FriendPage() {
         `FriendData${friendname}Timestamp`,
         new Date().getTime().toString()
       );
-
+      setIsLoading(false);
+      setError(null);
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setIsLoading(false);
+      setError(error.message);
       if (error.response?.status === 401) {
         navigate("/login");
       }
@@ -221,7 +226,18 @@ export default function FriendPage() {
       }
     }
   };
-
+  if (isLoading)
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+        <Loading />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+        <ErrorPage error={error} />
+      </div>
+    );
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
       {/* Matrix-like animated background */}
