@@ -6,7 +6,7 @@ import AuthPage from "../pages/AuthPage";
 import ProfilePage from "../pages/ProfilePage";
 import FriendPage from "../pages/FriendPage";
 import LeaderboardPage from "../pages/LeaderboardPage";
-import AddFriendPage from "../pages/AddFriend";
+import AddFriendPage from "../pages/Addfriend";
 import UpdateProfilePage from "../pages/UpdateProfile";
 import PasswordChangePage from "../pages/PasswordChange";
 
