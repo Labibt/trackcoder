@@ -1,14 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "../layout/Layout";
-
-import LandingPage from "../pages/LandingPage";
-import AuthPage from "../pages/AuthPage";
-import ProfilePage from "../pages/ProfilePage";
-import FriendPage from "../pages/FriendPage";
-import LeaderboardPage from "../pages/LeaderboardPage";
-import AddFriendPage from "../pages/Addfriend";
-import UpdateProfilePage from "../pages/Updateprofile";
-import PasswordChangePage from "../pages/PasswordChange";
+import {
+  LandingPage,
+  AuthPage,
+  ProfilePage,
+  FriendPage,
+  LeaderboardPage,
+  AddFriendPage,
+  UpdateProfilePage,
+  PasswordChangePage,
+} from "../pages";
 
 const AppRoutes = () => (
   <BrowserRouter>
