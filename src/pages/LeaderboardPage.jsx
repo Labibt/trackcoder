@@ -66,13 +66,13 @@ export default function LeaderboardPage() {
 
   if (loading)
     return (
-      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+      <div className="min-h-screen bg-gray-900 text-gray-100 pt-10">
         <Loading />
       </div>
     );
   if (error)
     return (
-      <div className="min-h-screen bg-gray-900 text-gray-100 mt-10">
+      <div className="min-h-screen bg-gray-900 text-gray-100 pt-10">
         <ErrorPage error={error} />
       </div>
     );
