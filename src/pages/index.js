@@ -4,8 +4,8 @@ import ProfilePage from './ProfilePage';
 import FriendPage from './FriendPage';
 import LeaderboardPage from './LeaderboardPage';
 import AddFriendPage from './Addfriend';
-import UpdateProfilePage from './Updateprofile';
 import PasswordChangePage from './PasswordChange';
+import UpdateProfilePage from './UpdateProfilePage';
 
 export {
     LandingPage,
