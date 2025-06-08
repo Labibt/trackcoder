@@ -1,8 +1,38 @@
 {
   "name": "trackcoders-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1",
   "type": "module",
+  "author": {
+    "name": "Siddharth Kumar",
+    "email": "siddharthcpn2512@gmail.com"
+  },
+  "description": "TrackCoders - A platform for tracking and managing coding progress",
+  "keywords": [
+    "coding",
+    "tracker",
+    "progress",
+    "developer",
+    "programming",
+    "web-development",
+    "react",
+    "vite",
+    "tailwindcss",
+    "trackcoders",
+    "leetcode profile tracker",
+    "codechef profile tracker",
+    "gfg profile tracker",
+    "track coding platform"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sidd2512/trackcoders-frontend"
+  },
+  "bugs": {
+    "url": "https://github.com/sidd2512/trackcoders-frontend/issues"
+  },
+  "homepage": "https://trackcoders.vercel.app",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
