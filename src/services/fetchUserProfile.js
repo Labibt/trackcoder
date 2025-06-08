@@ -1,6 +1,5 @@
 import axios from "axios";
-import { baseUri } from "../data/constantData";
-import Layout from "../layout/Layout";
+import { baseUri } from "../data/constantLink";
 
 export const fetchUserProfile = async () => {
   try {

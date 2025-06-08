@@ -1,69 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import {
-  FiUser,
-  FiCode,
-  FiBook,
-  FiCoffee,
-  FiBell,
-  FiLock,
-  FiEye,
-} from "react-icons/fi";
+import { FiUser, FiCode, FiBook, FiCoffee, FiBell } from "react-icons/fi";
 import { UserContext } from "../context/contextAPI";
 import { fetchUserProfile } from "../services/fetchUserProfile";
-import { baseUri } from "../data/constantData";
-
-const Input = ({ label, icon: Icon, ...props }) => (
-  <div className="mb-4">
-    <label className="block text-sm font-medium text-gray-300 mb-1 flex items-center">
-      {Icon && <Icon className="mr-2 text-blue-400" />}
-      {label}
-    </label>
-    <input
-      {...props}
-      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-  </div>
-);
-
-const Button = ({ children, isLoading, ...props }) => (
-  <button
-    {...props}
-    className={`w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
-      isLoading ? "opacity-50 cursor-not-allowed" : ""
-    }`}
-    disabled={isLoading}
-  >
-    {isLoading ? "Updating..." : children}
-  </button>
-);
-
-const Switch = ({ label, icon: Icon, checked, onChange }) => (
-  <label className="flex items-center cursor-pointer mb-4">
-    <div className="relative">
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-      />
-      <div
-        className={`block w-14 h-8 rounded-full ${
-          checked ? "bg-blue-500" : "bg-gray-600"
-        }`}
-      ></div>
-      <div
-        className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition ${
-          checked ? "transform translate-x-6" : ""
-        }`}
-      ></div>
-    </div>
-    <div className="ml-3 text-gray-300 font-medium flex items-center">
-      {Icon && <Icon className="mr-2 text-blue-400" />}
-      {label}
-    </div>
-  </label>
-);
+import { updateProfile } from "../services/profileService";
+import FormInput from "../components/FormInput";
+import FormButton from "../components/FormButton";
+import FormSwitch from "../components/FormSwitch";
 
 export default function UpdateProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -101,8 +43,8 @@ export default function UpdateProfilePage() {
         leetcodeId: userData.leetcode_data?.user_id || "",
         gfgId: userData.gfg_data?.user_id || "",
         codechefId: userData.codechef_data?.user_id || "",
-        friendUpdates: userData.notifications?.friendUpdates || true,
-        contestReminders: userData.notifications?.contestReminders || false,
+        friendUpdates: userData.notifications?.friendUpdates ?? true,
+        contestReminders: userData.notifications?.contestReminders ?? false,
       });
     }
   }, [userData]);
@@ -127,29 +69,28 @@ export default function UpdateProfilePage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${baseUri}/user/update`, formData, {
-        withCredentials: true,
-      });
-
+      const updatedData = await updateProfile(formData);
+      setUserData((prevData) => ({
+        ...prevData,
+        ...updatedData,
+      }));
       alert("Profile Updated Successfully!");
-      console.log("Server Response:", response.data);
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      alert(error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 mt-10 py-12 px-4">
-      <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-        <div className="px-6 py-8">
+    <div className="min-h-screen bg-gray-900 text-gray-100 pt-12 py-12 px-4 ">
+      <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-5">
+        <div className="px-6 py-8 pt-3">
           <h2 className="text-3xl font-bold text-blue-400 mb-8">
             Profile Settings
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
+            <FormInput
               label="Name"
               icon={FiUser}
               name="name"
@@ -158,7 +99,7 @@ export default function UpdateProfilePage() {
               onChange={handleInputChange}
               required
             />
-            <Input
+            <FormInput
               label="Email"
               icon={FiUser}
               name="email"
@@ -167,7 +108,7 @@ export default function UpdateProfilePage() {
               onChange={handleInputChange}
               required
             />
-            <Input
+            <FormInput
               label="LeetCode ID"
               icon={FiCode}
               name="leetcodeId"
@@ -175,7 +116,7 @@ export default function UpdateProfilePage() {
               value={formData.leetcodeId}
               onChange={handleInputChange}
             />
-            <Input
+            <FormInput
               label="GeeksforGeeks ID"
               icon={FiBook}
               name="gfgId"
@@ -183,7 +124,7 @@ export default function UpdateProfilePage() {
               value={formData.gfgId}
               onChange={handleInputChange}
             />
-            <Input
+            <FormInput
               label="CodeChef ID"
               icon={FiCoffee}
               name="codechefId"
@@ -195,13 +136,13 @@ export default function UpdateProfilePage() {
             <h3 className="text-xl font-semibold text-blue-400">
               Notifications
             </h3>
-            <Switch
+            <FormSwitch
               label="Get Friend Updates"
               icon={FiBell}
               checked={formData.friendUpdates}
               onChange={(value) => handleSwitchChange("friendUpdates", value)}
             />
-            <Switch
+            <FormSwitch
               label="Contest Reminders"
               icon={FiBell}
               checked={formData.contestReminders}
@@ -210,9 +151,9 @@ export default function UpdateProfilePage() {
               }
             />
 
-            <Button type="submit" isLoading={isLoading}>
-              Update Profile
-            </Button>
+            <FormButton type="submit" disabled={isLoading}>
+              {isLoading ? "Updating..." : "Update Profile"}
+            </FormButton>
           </form>
         </div>
       </div>

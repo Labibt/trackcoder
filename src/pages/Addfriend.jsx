@@ -1,29 +1,8 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { FiUserPlus, FiCode, FiBook, FiCoffee } from "react-icons/fi";
-import { baseUri } from "../data/constantData";
-
-const Input = ({ label, icon: Icon, ...props }) => (
-  <div className="mb-6">
-    <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center">
-      {Icon && <Icon className="mr-2 text-teal-400" />}
-      {label}
-    </label>
-    <input
-      {...props}
-      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-500"
-    />
-  </div>
-);
-
-const Button = ({ children, ...props }) => (
-  <button
-    {...props}
-    className="w-full px-5 py-3 bg-teal-500 text-white rounded-lg font-semibold shadow-md hover:bg-teal-600 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-  >
-    {children}
-  </button>
-);
+import FormInput from "../components/FormInput";
+import FormButton from "../components/FormButton";
+import { addFriend } from "../services/friendService";
 
 export default function AddFriendPage() {
   const [formData, setFormData] = useState({
@@ -46,38 +25,28 @@ export default function AddFriendPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Friend sent:", formData);
+
     try {
-      const res = await axios.post(`${baseUri}/friend/add`, formData, {
-        withCredentials: true,
-      });
-      if (res.data.status === 200) {
-        alert(
-          res.data.message || "Friend added successfully! Data is fetching."
-        );
-      } else {
-        console.error("Error adding friend:", res.data);
-        alert(res.data.message || "Failed to add friend. Please try again.");
+      const result = await addFriend(formData);
+      alert(result.message);
+
+      if (result.success) {
+        setFormData({
+          name: "",
+          leetcodeId: "",
+          gfgId: "",
+          codechefId: "",
+        });
       }
-    } catch (err) {
-      console.error("Error adding friend:", err);
-      alert(
-        "Failed to add friend. Please check your network or try again later."
-      );
+    } catch (error) {
+      alert(error.message);
     } finally {
       setLoading(false);
     }
-
-    setFormData({
-      name: "",
-      leetcodeId: "",
-      gfgId: "",
-      codechefId: "",
-    });
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center py-12 px-6">
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center py-12 px-6 pt-8">
       <div className="w-full max-w-lg bg-gray-800 rounded-xl shadow-lg overflow-hidden">
         <div className="p-8">
           <div className="flex items-center justify-between mb-8">
@@ -92,7 +61,7 @@ export default function AddFriendPage() {
               <h3 className="text-xl font-semibold text-teal-400">
                 Friend's Information
               </h3>
-              <Input
+              <FormInput
                 label="Friend's Name"
                 icon={FiUserPlus}
                 name="name"
@@ -108,7 +77,7 @@ export default function AddFriendPage() {
               <h3 className="text-xl font-semibold text-teal-400">
                 Coding Platforms
               </h3>
-              <Input
+              <FormInput
                 label="LeetCode ID"
                 icon={FiCode}
                 name="leetcodeId"
@@ -117,7 +86,7 @@ export default function AddFriendPage() {
                 onChange={handleInputChange}
                 placeholder="Enter LeetCode ID"
               />
-              <Input
+              <FormInput
                 label="GeeksforGeeks ID"
                 icon={FiBook}
                 name="gfgId"
@@ -126,7 +95,7 @@ export default function AddFriendPage() {
                 onChange={handleInputChange}
                 placeholder="Enter GeeksforGeeks ID"
               />
-              <Input
+              <FormInput
                 label="CodeChef ID"
                 icon={FiCoffee}
                 name="codechefId"
@@ -137,9 +106,9 @@ export default function AddFriendPage() {
               />
             </div>
 
-            <Button type="submit" disabled={loading}>
+            <FormButton type="submit" disabled={loading}>
               {loading ? "Adding..." : "Add Friend"}
-            </Button>
+            </FormButton>
           </form>
         </div>
       </div>

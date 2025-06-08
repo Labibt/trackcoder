@@ -48,8 +48,11 @@ export default function Navbar() {
       : "text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium";
 
   return (
-    <nav className="bg-blue-950 shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="container mx-auto px-4">
+    <nav
+      className="bg-gradient-to-b from-blue-950 via-blue-950/80 to-gray-900/10 fixed top-0 left-0 right-0 z-50
+"
+    >
+      <div className="container mx-auto px-4 ">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <NavLink
@@ -64,13 +67,13 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-6">
             {isAuthenticated ? (
               <>
-                <NavLink to="/user" className={navLinkStyles}>
+                <NavLink to="/user" end className={navLinkStyles}>
                   Home
                 </NavLink>
-                <NavLink to="/user/leaderboard" className={navLinkStyles}>
+                <NavLink to="/user/leaderboard" end className={navLinkStyles}>
                   Leaderboard
                 </NavLink>
-                <NavLink to="/user/addFriend" className={navLinkStyles}>
+                <NavLink to="/user/addFriend" end className={navLinkStyles}>
                   Add Friend
                 </NavLink>
               </>
@@ -80,12 +83,7 @@ export default function Navbar() {
           {/* Right Profile Section */}
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
-              <div
-                ref={dropdownRef}
-                className="relative"
-                onMouseEnter={() => setIsProfileDropdownOpen(true)}
-                onMouseLeave={() => setIsProfileDropdownOpen(false)}
-              >
+              <div ref={dropdownRef} className="relative">
                 <button
                   onClick={toggleProfileDropdown}
                   className="text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium flex items-center transition"
@@ -127,13 +125,13 @@ export default function Navbar() {
             ) : (
               <div className="flex items-center space-x-2">
                 <NavLink
-                  to="/auth"
+                  to="/auth?mode=login"
                   className="text-gray-600 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Login
                 </NavLink>
                 <NavLink
-                  to="/auth"
+                  to="/auth?mode=signup"
                   className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Sign Up
@@ -211,7 +209,7 @@ export default function Navbar() {
                 <>
                   <li>
                     <NavLink
-                      to="/auth"
+                      to="/auth?mode=login"
                       className="block px-4 py-2 hover:bg-blue-100 hover:text-blue-700 rounded transition"
                     >
                       Login
@@ -219,7 +217,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <NavLink
-                      to="/auth"
+                      to="/auth?mode=signup"
                       className="block px-4 py-2 hover:bg-blue-100 hover:text-blue-700 rounded transition"
                     >
                       Sign Up

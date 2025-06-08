@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { baseUri } from "../data/constantLink";
+import { useNavigate } from "react-router-dom";
 
 const Input = ({ label, icon: Icon, type, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,6 +42,8 @@ export default function ChangePasswordPage() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,34 +57,60 @@ export default function ChangePasswordPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setIsLoading(true);
 
     if (formData.newPassword !== formData.confirmPassword) {
       setError("New passwords don't match");
+      setIsLoading(false);
       return;
     }
 
     if (formData.newPassword.length < 8) {
       setError("New password must be at least 8 characters long");
+      setIsLoading(false);
       return;
     }
 
     try {
-      // Here you would typically make an API call to change the password
-      // For now, we'll just simulate a successful password change
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch(`${baseUri}/auth/change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          currentPassword: formData.currentPassword,
+          newPassword: formData.newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to change password");
+      }
+
       setSuccess("Password changed successfully");
       setFormData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
+
+      // Redirect to profile page after 2 seconds
+      setTimeout(() => {
+        navigate("/user");
+      }, 2000);
     } catch (err) {
-      setError("Failed to change password. Please try again.");
+      setError(err.message || "Failed to change password. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
       <div className="max-w-md mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <div className="px-6 py-8">
           <div className="flex items-center justify-between mb-8">
@@ -129,9 +159,12 @@ export default function ChangePasswordPage() {
 
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              disabled={isLoading}
+              className={`w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Change Password
+              {isLoading ? "Changing Password..." : "Change Password"}
             </button>
           </form>
         </div>

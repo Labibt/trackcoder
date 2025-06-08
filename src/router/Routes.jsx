@@ -7,7 +7,7 @@ import ProfilePage from "../pages/ProfilePage";
 import FriendPage from "../pages/FriendPage";
 import LeaderboardPage from "../pages/LeaderboardPage";
 import AddFriendPage from "../pages/Addfriend";
-import UpdateProfilePage from "../pages/UpdateProfile";
+import UpdateProfilePage from "../pages/Updateprofile";
 import PasswordChangePage from "../pages/PasswordChange";
 
 const AppRoutes = () => (

@@ -17,25 +17,23 @@ import {
   Binary,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { base } from "framer-motion/client";
-import { baseUri } from "../data/constantData";
+import { FeatureCard, UpcomingFeatureCard } from "../components/FeatureCards";
+import { pingServer } from "../services/landingService";
 
 export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
-    const pong = () => {
-      axios
-        .get(`${baseUri}/ping`, { withCredentials: true })
-        .then((response) => {
-          console.log("API Response Data:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching leaderboard data:", error);
-        });
+    const checkServerStatus = async () => {
+      try {
+        const response = await pingServer();
+        console.log("API Response Data:", response);
+      } catch (error) {
+        console.error("Error checking server status:", error);
+      }
     };
+    checkServerStatus();
   }, []);
 
   return (
@@ -90,7 +88,7 @@ export default function LandingPage() {
                 together in your coding journey
               </p>
               <div className="flex justify-center gap-4">
-                <Link to="/auth">
+                <Link to="/auth?mode=login">
                   <button className="px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all flex items-center gap-2">
                     Get Started
                     <ArrowRight className="h-5 w-5" />
@@ -108,14 +106,8 @@ export default function LandingPage() {
                   <div className="text-sm text-gray-400">Platforms</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-400">
-                    1000+
-                  </div>
+                  <div className="text-3xl font-bold text-purple-400">100+</div>
                   <div className="text-sm text-gray-400">Users</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400">10K+</div>
-                  <div className="text-sm text-gray-400">Problems</div>
                 </div>
               </div>
             </div>
@@ -188,37 +180,37 @@ export default function LandingPage() {
               icon={Bell}
               title="Smart Notifications"
               description="Get notified when friends surpass your progress or solve problems you're stuck on"
-              eta="Q1 2024"
+              eta="Q4 2025"
             />
             <UpcomingFeatureCard
               icon={Timer}
               title="Contest Reminders"
               description="Never miss a coding contest with timely reminders and notifications"
-              eta="Q1 2024"
+              eta="Q1 2026"
             />
             <UpcomingFeatureCard
               icon={Rocket}
               title="Browser Extension"
               description="See which friends have solved the problem you're currently viewing"
-              eta="Q2 2024"
+              eta="Q2 2026"
             />
             <UpcomingFeatureCard
               icon={CheckCircle2}
               title="Solution Sharing"
               description="Share and discuss solutions with friends directly on the platform"
-              eta="Q2 2024"
+              eta="Q3 2026"
             />
             <UpcomingFeatureCard
               icon={Zap}
               title="Daily Challenges"
               description="Compete with friends in daily coding challenges"
-              eta="Q3 2024"
+              eta="Q4 2026"
             />
             <UpcomingFeatureCard
               icon={Brain}
               title="AI-Powered Recommendations"
               description="Get personalized problem recommendations based on your progress"
-              eta="Q3 2024"
+              eta="Q4 2026"
             />
           </div>
         </div>
@@ -236,7 +228,7 @@ export default function LandingPage() {
             next level
           </p>
           <div className="flex justify-center">
-            <Link to="/auth">
+            <Link to="/auth?mode=signup">
               <button className="px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all flex items-center gap-2">
                 Get Started Now
                 <ArrowRight className="h-5 w-5" />
@@ -245,41 +237,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-    </div>
-  );
-}
-
-// Feature Card Component
-function FeatureCard({ icon: Icon, title, description }) {
-  return (
-    <div className="group bg-gray-800/50 border-gray-700 hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 p-6 rounded-md transform group-hover:scale-105">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="p-2 rounded-lg bg-blue-600/10 text-blue-400 group-hover:scale-110 transition-transform">
-          <Icon className="h-6 w-6" />
-        </div>
-        <h3 className="text-xl font-semibold">{title}</h3>
-      </div>
-      <p className="text-gray-400">{description}</p>
-    </div>
-  );
-}
-
-// Upcoming Feature Card Component
-function UpcomingFeatureCard({ icon: Icon, title, description, eta }) {
-  return (
-    <div className="group bg-gray-800/50 border-gray-700 hover:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 p-6 rounded-md transform group-hover:scale-105">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="p-2 rounded-lg bg-purple-600/10 text-purple-400 group-hover:scale-110 transition-transform">
-          <Icon className="h-6 w-6" />
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold">{title}</h3>
-          <span className="inline-block bg-purple-500/10 text-purple-400 border-purple-400/20 px-3 py-1 text-sm rounded-md mt-1">
-            {eta}
-          </span>
-        </div>
-      </div>
-      <p className="text-gray-400">{description}</p>
     </div>
   );
 }

@@ -1,21 +1,16 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import {
-  FiMail,
-  FiLock,
-  FiEye,
-  FiEyeOff,
-  FiArrowLeft,
-  FiCode,
-} from "react-icons/fi";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { FiArrowLeft, FiCode } from "react-icons/fi";
 import { UserContext } from "../context/contextAPI";
-import { useContext } from "react";
-import { baseUri } from "../data/constantData";
+import MatrixBackground from "../components/MatrixBackground";
+import EmailInput from "../components/EmailInput";
+import PasswordInput from "../components/PasswordInput";
+import PlatformInputs from "../components/PlatformInputs";
+import { login, register, guestLogin } from "../services/authService";
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [isLogin, setIsLogin] = useState(searchParams.get("mode") !== "signup");
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,6 +24,17 @@ export default function AuthPage() {
     gfg_id: "",
   });
 
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    setIsLogin(mode !== "signup");
+  }, [searchParams]);
+
+  const handleToggleMode = () => {
+    const newMode = !isLogin;
+    setIsLogin(newMode);
+    navigate(`/auth?mode=${newMode ? "login" : "signup"}`, { replace: true });
+  };
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
@@ -36,27 +42,10 @@ export default function AuthPage() {
 
   const handleGuestLogin = async () => {
     try {
-      console.log("Trying to log in as guest...");
       setLoading(true);
-
-      const response = await axios.post(
-        `${baseUri}/auth/login`,
-        {
-          email: "testuserLGC3@example.com",
-          password: "SecurePassword123",
-        },
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        console.log("Login successful:", response.data);
-        // Save tokens or other details if needed
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userid", response.data.user._id);
-        localStorage.setItem("user", response.data.user);
-        setIsAuthenticated(true);
-        navigate(`/user`);
-      }
+      await guestLogin();
+      setIsAuthenticated(true);
+      navigate(`/user`);
     } catch (err) {
       setError(
         err.response?.data?.error || "Guest login failed. Please try again."
@@ -69,31 +58,15 @@ export default function AuthPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-    setLoading(true); // Start the loading spinner
+    setError("");
+    setLoading(true);
 
     try {
       if (isLogin) {
-        console.log("Trying to log in...");
-        console.log(formData);
-        const response = await axios.post(
-          `${baseUri}/auth/login`,
-          {
-            email: formData.email,
-            password: formData.password,
-          },
-          { withCredentials: true }
-        );
-
-        if (response.status === 200) {
-          console.log("Login successful:", response.data);
-          localStorage.setItem("user", response.data.user);
-          localStorage.setItem("userid", response.data.user._id);
-          localStorage.setItem("isLoggedIn", "true");
-          setIsAuthenticated(true);
-          navigate(`/user`);
-          setFormData({ email: "", password: "" });
-        }
+        await login(formData.email, formData.password);
+        setIsAuthenticated(true);
+        navigate(`/user`);
+        setFormData({ email: "", password: "" });
       } else {
         if (
           !formData.leetcode_id &&
@@ -105,13 +78,10 @@ export default function AuthPage() {
           return;
         }
 
-        const response = await axios.post(`${baseUri}/auth/register`, formData);
-
-        if (response.status == 201) {
-          setIsLogin(true);
-          setError("Registration successful! Please login.");
-          setFormData({ email: "", password: "" });
-        }
+        await register(formData);
+        setIsLogin(true);
+        setError("Registration successful! Please login.");
+        setFormData({ email: "", password: "" });
       }
     } catch (err) {
       setError(
@@ -125,30 +95,7 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 relative overflow-hidden">
-      {/* Matrix-like animated background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="relative h-full w-full">
-          <div className="absolute inset-0 overflow-hidden">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute text-blue-500/20 whitespace-nowrap text-sm animate-matrix"
-                style={{
-                  left: `${i * 5}%`,
-                  animationDelay: `${i * 0.1}s`,
-                  top: "-100%",
-                }}
-              >
-                {Array.from({ length: 50 }).map((_, j) => (
-                  <div key={j} className="my-2">
-                    {Math.random().toString(2).substring(2, 10)}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <MatrixBackground />
 
       {/* Main Content */}
       <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
@@ -183,87 +130,22 @@ export default function AuthPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Registration form */}
             {!isLogin && (
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Enter Name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-white placeholder-gray-400"
-                />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <input
-                    type="text"
-                    name="leetcode_id"
-                    placeholder="LeetCode ID"
-                    value={formData.leetcode_id}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-white placeholder-gray-400"
-                  />
-                  <input
-                    type="text"
-                    name="codechef_id"
-                    placeholder="CodeChef ID"
-                    value={formData.codechef_id}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-white placeholder-gray-400"
-                  />
-                  <input
-                    type="text"
-                    name="gfg_id"
-                    placeholder="GFG ID"
-                    value={formData.gfg_id}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-white placeholder-gray-400"
-                  />
-                </div>
-              </div>
+              <PlatformInputs
+                formData={formData}
+                onChange={handleInputChange}
+              />
             )}
 
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <FiMail className="w-5 h-5" />
-              </div>
+            <EmailInput
+              value={formData.email}
+              onChange={(e) => handleInputChange(e)}
+            />
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-white placeholder-gray-400"
-                required
-              />
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <FiLock className="w-5 h-5" />
-              </div>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="w-full pl-10 pr-12 py-2 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-white placeholder-gray-400"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300"
-              >
-                {showPassword ? (
-                  <FiEyeOff className="w-5 h-5" />
-                ) : (
-                  <FiEye className="w-5 h-5" />
-                )}
-              </button>
-            </div>
+            <PasswordInput
+              value={formData.password}
+              onChange={(e) => handleInputChange(e)}
+            />
 
             <button
               type="submit"
@@ -292,7 +174,7 @@ export default function AuthPage() {
           <p className="text-center text-gray-400 mt-4">
             {isLogin ? "New here?" : "Already have an account?"}{" "}
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={handleToggleMode}
               className="text-blue-400 hover:text-blue-300 transition-colors font-medium underline"
             >
               {isLogin ? "Create Account" : "Login"}

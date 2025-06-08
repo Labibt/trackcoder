@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import { baseUri } from "../data/constantData";
+import { baseUri } from "../data/constantLink";
 
 export const UserContext = createContext();
 
