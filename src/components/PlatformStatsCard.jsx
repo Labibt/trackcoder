@@ -49,7 +49,7 @@ const PlatformStatsCard = ({
 
   return (
     <div
-      className={`p-6 rounded-lg ${platform.bgColor} border ${platform.borderColor} backdrop-blur-sm transition-transform hover:scale-105`}
+      className={`p-6 rounded-lg ${platform.bgColor} hover:border ${platform.borderColor} backdrop-blur-sm transition-transform hover:scale-105`}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
