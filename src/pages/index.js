@@ -6,6 +6,7 @@ import LeaderboardPage from './LeaderboardPage';
 import AddFriendPage from './Addfriend';
 import PasswordChangePage from './PasswordChange';
 import UpdateProfilePage from './UpdateProfilePage';
+import ReportBugPage from './ReportBugPage';
 
 export {
     LandingPage,
@@ -15,5 +16,6 @@ export {
     LeaderboardPage,
     AddFriendPage,
     UpdateProfilePage,
-    PasswordChangePage
+    PasswordChangePage,
+    ReportBugPage
 }; 

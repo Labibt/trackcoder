@@ -180,6 +180,15 @@ export default function AuthPage() {
               {isLogin ? "Create Account" : "Login"}
             </button>
           </p>
+          <p className="text-center text-gray-400 mt-2">
+            Found a bug?{" "}
+            <Link
+              to="/user/report-bug"
+              className="text-red-400 hover:text-red-300 transition-colors font-medium underline"
+            >
+              Report it here
+            </Link>
+          </p>
         </div>
       </div>
     </div>

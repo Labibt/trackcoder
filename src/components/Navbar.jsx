@@ -76,6 +76,9 @@ export default function Navbar() {
                 <NavLink to="/user/addFriend" end className={navLinkStyles}>
                   Add Friend
                 </NavLink>
+                <NavLink to="/user/report-bug" end className={navLinkStyles}>
+                  Report Bug
+                </NavLink>
               </>
             ) : null}
           </div>
@@ -178,6 +181,14 @@ export default function Navbar() {
                       className="block px-4 py-2 hover:bg-blue-100 hover:text-blue-700 rounded transition"
                     >
                       Add Friend
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/user/report-bug"
+                      className="block px-4 py-2 hover:bg-blue-100 hover:text-blue-700 rounded transition"
+                    >
+                      Report Bug
                     </NavLink>
                   </li>
                   <li>

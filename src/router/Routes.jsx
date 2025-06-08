@@ -9,6 +9,7 @@ import {
   AddFriendPage,
   UpdateProfilePage,
   PasswordChangePage,
+  ReportBugPage,
 } from "../pages";
 
 const AppRoutes = () => (
@@ -23,6 +24,7 @@ const AppRoutes = () => (
         <Route path="/user/edit-profile" element={<UpdateProfilePage />} />
         <Route path="/user/password-change" element={<PasswordChangePage />} />
         <Route path="/user/friend/:friendname" element={<FriendPage />} />
+        <Route path="/user/report-bug" element={<ReportBugPage />} />
       </Routes>
     </Layout>
   </BrowserRouter>
