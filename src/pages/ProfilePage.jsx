@@ -19,6 +19,7 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
   const { userData, setUserData, setIsAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,9 +29,17 @@ export default function ProfilePage() {
         setUserData(data);
         setIsAuthenticated(true);
       } catch (err) {
-        setError(err.message);
+        console.log(err);
+
+        setError(err.response?.data?.error || "Failed to fetch profile data");
+        setIsAuthenticated(false);
+        localStorage.removeItem("user");
+        localStorage.removeItem("isLoggedIn");
         if (err.response?.status === 401) {
-          navigate("/login");
+          if (err.response?.status === 401) {
+            setRedirectToLogin(true);
+            console.log("Unauthorized access, redirecting to login");
+          }
         }
       } finally {
         setLoading(false);
@@ -65,7 +74,7 @@ export default function ProfilePage() {
   if (error)
     return (
       <div className="min-h-screen bg-gray-900 text-gray-100 pt-10">
-        <ErrorPage error={error} />
+        <ErrorPage error={error} showLoginButton={redirectToLogin} />
       </div>
     );
 

@@ -33,8 +33,6 @@ export const fetchUserProfile = async () => {
     return response.data; // Return the profile data
   } catch (error) {
     console.error("Error fetching profile:", error);
-    throw new Error(
-      error.response?.data?.error || "Failed to fetch user profile."
-    );
+    throw error;
   }
 };
