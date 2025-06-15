@@ -103,14 +103,16 @@ export default function ChangePasswordPage() {
         navigate("/user");
       }, 2000);
     } catch (err) {
-      setError(err.message || "Failed to change password. Please try again.");
+      setError(
+        err.data.message || "Failed to change password. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+    <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 pt-20">
       <div className="max-w-md mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <div className="px-6 py-8">
           <div className="flex items-center justify-between mb-8">

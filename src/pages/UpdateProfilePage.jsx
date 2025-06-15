@@ -21,18 +21,20 @@ export default function UpdateProfilePage() {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!userData) {
-          const data = await fetchUserProfile();
-          setUserData(data);
+    if (!userData) {
+      const fetchData = async () => {
+        try {
+          if (!userData) {
+            const data = await fetchUserProfile();
+            setUserData(data);
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
         }
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-      }
-    };
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [userData, setUserData]);
 
   useEffect(() => {
@@ -76,7 +78,8 @@ export default function UpdateProfilePage() {
       }));
       alert("Profile Updated Successfully!");
     } catch (error) {
-      alert(error.message);
+      console.error("Error updating profile:", error);
+      alert(error.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +109,7 @@ export default function UpdateProfilePage() {
               type="email"
               value={formData.email}
               onChange={handleInputChange}
-              required
+              disabled
             />
             <FormInput
               label="LeetCode ID"

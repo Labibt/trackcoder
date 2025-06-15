@@ -28,15 +28,17 @@ export default function ProfilePage() {
         const data = await fetchUserProfile();
         setUserData(data);
         setIsAuthenticated(true);
+        console.log("Profile data fetched successfully:", userData);
       } catch (err) {
         console.log(err);
 
         setError(err.response?.data?.error || "Failed to fetch profile data");
-        setIsAuthenticated(false);
-        localStorage.removeItem("user");
-        localStorage.removeItem("isLoggedIn");
+
         if (err.response?.status === 401) {
           if (err.response?.status === 401) {
+            setIsAuthenticated(false);
+            localStorage.removeItem("user");
+            localStorage.removeItem("isLoggedIn");
             setRedirectToLogin(true);
             console.log("Unauthorized access, redirecting to login");
           }
@@ -56,7 +58,7 @@ export default function ProfilePage() {
   const filteredProblems =
     userData?.[`${activeTab}_data`]?.question_solved?.filter((problem) => {
       const matchesSearch = problem.title
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(searchTerm.toLowerCase());
       const matchesDifficulty =
         difficultyFilter === "all" ||

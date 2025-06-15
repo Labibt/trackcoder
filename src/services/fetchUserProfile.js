@@ -29,7 +29,7 @@ export const fetchUserProfile = async () => {
       ...defaultPlatformData,
     };
 
-    console.log("Profile data:", response.data);
+    // console.log("Profile data:", response.data);
     return response.data; // Return the profile data
   } catch (error) {
     console.error("Error fetching profile:", error);
