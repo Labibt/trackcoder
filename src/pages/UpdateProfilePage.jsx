@@ -41,7 +41,7 @@ export default function UpdateProfilePage() {
     if (userData) {
       setFormData({
         name: userData.name || "",
-        email: userData.email || "",
+        email: userData.email || userData.user?.email || "",
         leetcodeId: userData.leetcode_data?.user_id || "",
         gfgId: userData.gfg_data?.user_id || "",
         codechefId: userData.codechef_data?.user_id || "",
@@ -53,6 +53,7 @@ export default function UpdateProfilePage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log('Input change:', name, value); // Debug log
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -109,6 +110,7 @@ export default function UpdateProfilePage() {
               type="email"
               value={formData.email}
               onChange={handleInputChange}
+              placeholder="Enter your email"
             />
             <FormInput
               label="LeetCode ID"

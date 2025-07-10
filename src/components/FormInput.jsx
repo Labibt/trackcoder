@@ -8,7 +8,7 @@ const FormInput = ({ label, icon: Icon, ...props }) => (
     </label>
     <input
       {...props}
-      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-500"
+      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
     />
   </div>
 );
