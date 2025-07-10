@@ -83,8 +83,8 @@ export const firebaseRegister = async (formData) => {
 };
 
 export const firebaseGuestLogin = async () => {
-  // For demo purposes, you can create a guest account
-  return await firebaseLogin("guest@trackcoders.com", "guestpassword123");
+  // Use the guest account you created in Firebase
+  return await firebaseLogin("labibt42@gmail.com", "guestpassword123");
 };
 
 export const firebaseLogout = async () => {
