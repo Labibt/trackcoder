@@ -109,7 +109,6 @@ export default function UpdateProfilePage() {
               type="email"
               value={formData.email}
               onChange={handleInputChange}
-              disabled
             />
             <FormInput
               label="LeetCode ID"
