@@ -1,18 +1,11 @@
-import axios from "axios";
-import { baseUri } from "../data/constantLink";
+import { updateFirebaseProfile } from './firebaseUserService';
 
 export const updateProfile = async (profileData) => {
   try {
-    const response = await axios.post(
-      `${baseUri}/auth/updateUserProfile`,
-      profileData,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data;
+    const response = await updateFirebaseProfile(profileData);
+    return response;
   } catch (error) {
     console.error("Error updating profile:", error);
-    throw error.response;
+    throw { data: { message: error.message } };
   }
 };

@@ -1,12 +1,14 @@
-import axios from "axios";
-import { baseUri } from "../data/constantLink";
-
+// Since we're using Firebase, we don't need to ping a separate server
+// This can be a simple function that returns a success message
 export const pingServer = async () => {
   try {
-    const response = await axios.get(`${baseUri}/`, { withCredentials: true });
-    return response.data;
+    // You could add Firebase health check here if needed
+    return { 
+      message: "Firebase backend is ready!",
+      status: "online" 
+    };
   } catch (error) {
-    console.error("Error pinging server:", error);
+    console.error("Error checking Firebase status:", error);
     throw error;
   }
-}; 
+};

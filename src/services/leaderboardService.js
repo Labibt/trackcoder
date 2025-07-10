@@ -1,14 +1,11 @@
-import axios from "axios";
-import { baseUri } from "../data/constantLink";
+import { fetchFirebaseLeaderboard } from './firebaseUserService';
 
 export const fetchLeaderboard = async () => {
   try {
-    const response = await axios.get(`${baseUri}/user/leaderboard`, {
-      withCredentials: true,
-    });
+    const response = await fetchFirebaseLeaderboard();
 
-    if (response.status === 200 && response.data.success) {
-      const { friends, user } = response.data.data;
+    if (response.success) {
+      const { friends, user } = response.data;
       user.name = "YOU";
       return [user, ...friends];
     }
@@ -16,4 +13,4 @@ export const fetchLeaderboard = async () => {
   } catch (error) {
     throw error;
   }
-}; 
+};

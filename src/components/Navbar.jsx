@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FaCode, FaUser, FaBars } from "react-icons/fa";
 import { UserContext } from "../context/contextAPI";
 import { useContext } from "react";
+import { firebaseLogout } from "../services/firebaseAuthService";
 
 export default function Navbar() {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -33,10 +34,7 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    // Clear all authentication-related data
-    localStorage.removeItem("user");
-    localStorage.removeItem("isLoggedIn");
-    setIsAuthenticated(false);
+    firebaseLogout();
     setIsProfileDropdownOpen(false);
     setIsMobileMenuOpen(false);
     navigate("/");

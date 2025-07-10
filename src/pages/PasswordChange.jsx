@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { FiLock, FiEye, FiEyeOff } from "react-icons/fi";
-import { baseUri } from "../data/constantLink";
 import { useNavigate } from "react-router-dom";
+import { firebaseChangePassword } from "../services/firebaseAuthService";
 
 const Input = ({ label, icon: Icon, type, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -72,24 +72,7 @@ export default function ChangePasswordPage() {
     }
 
     try {
-      const response = await fetch(`${baseUri}/auth/change-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          currentPassword: formData.currentPassword,
-          newPassword: formData.newPassword,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to change password");
-      }
+      await firebaseChangePassword(formData.currentPassword, formData.newPassword);
 
       setSuccess("Password changed successfully");
       setFormData({
@@ -104,7 +87,7 @@ export default function ChangePasswordPage() {
       }, 2000);
     } catch (err) {
       setError(
-        err.data.message || "Failed to change password. Please try again."
+        err.message || "Failed to change password. Please try again."
       );
     } finally {
       setIsLoading(false);

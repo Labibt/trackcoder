@@ -1,27 +1,24 @@
-import axios from "axios";
-import { baseUri } from "../data/constantLink";
+import { 
+  addFirebaseFriend, 
+  removeFirebaseFriend, 
+  fetchFirebaseFriendData 
+} from './firebaseUserService';
 
 export const fetchFriendData = async (friendname) => {
   try {
-    const response = await axios.get(
-      `${baseUri}/user/compare/${friendname}`,
-      {
-        withCredentials: true,
-      }
-    );
-  console.log(response);
-  
+    const data = await fetchFirebaseFriendData(friendname);
+    
     // Update cache
     localStorage.setItem(
       `FriendData${friendname}`,
-      JSON.stringify(response.data)
+      JSON.stringify(data)
     );
     localStorage.setItem(
       `FriendData${friendname}Timestamp`,
       new Date().getTime().toString()
     );
 
-    return response.data;
+    return data;
   } catch (error) {
     throw error;
   }
@@ -29,9 +26,7 @@ export const fetchFriendData = async (friendname) => {
 
 export const removeFriend = async (friendname) => {
   try {
-    await axios.delete(`${baseUri}friend/remove/${friendname}`, {
-      withCredentials: true,
-    });
+    await removeFirebaseFriend(friendname);
 
     // Clear the friend's cached data
     localStorage.removeItem(`FriendData${friendname}`);
@@ -49,23 +44,21 @@ export const removeFriend = async (friendname) => {
 
 export const addFriend = async (friendData) => {
   try {
-    const response = await axios.post(`${baseUri}/friend/add`, friendData, {
-      withCredentials: true,
-    });
+    const response = await addFirebaseFriend(friendData);
     
-    if (response.data.status === 200) {
+    if (response.status === 200) {
       return {
         success: true,
-        message: response.data.message || "Friend added successfully! Data is fetching."
+        message: response.message || "Friend added successfully! Data is fetching."
       };
     }
     
     return {
       success: false,
-      message: response.data.message || "Failed to add friend. Please try again."
+      message: response.message || "Failed to add friend. Please try again."
     };
   } catch (error) {
     console.error("Error adding friend:", error);
-    throw new Error("Failed to add friend. Please check your network or try again later.");
+    throw new Error(error.message || "Failed to add friend. Please check your network or try again later.");
   }
-}; 
+};

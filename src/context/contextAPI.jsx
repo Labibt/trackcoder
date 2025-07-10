@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import axios from "axios";
-import { baseUri } from "../data/constantLink";
+import { auth } from "../config/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export const UserContext = createContext();
 
@@ -8,20 +8,23 @@ export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Function to validate authentication
-  const validateAuth = async () => {
-    try {
-      const response = await axios.get(`${baseUri}/auth/validateToken`, {
-        withCredentials: true, // Ensure cookies are sent
-      });
-      setUserData(response.data.user);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error("Authentication validation failed:", error);
-      setIsAuthenticated(false);
-      setUserData(null);
-    }
-  };
+  // Listen to Firebase auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+        // userData will be set by individual components when they fetch profile
+      } else {
+        setIsAuthenticated(false);
+        setUserData(null);
+        localStorage.removeItem("user");
+        localStorage.removeItem("userid");
+        localStorage.removeItem("isLoggedIn");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <UserContext.Provider
@@ -30,7 +33,6 @@ export const UserProvider = ({ children }) => {
         setUserData,
         isAuthenticated,
         setIsAuthenticated,
-        validateAuth,
       }}
     >
       {children}
